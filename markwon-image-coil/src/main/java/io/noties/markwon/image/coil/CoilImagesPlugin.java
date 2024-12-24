@@ -1,5 +1,7 @@
 package io.noties.markwon.image.coil;
 
+import static coil3.Image_androidKt.asDrawable;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Spanned;
@@ -14,11 +16,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import coil.Coil;
-import coil.ImageLoader;
-import coil.request.ImageRequest;
-import coil.request.Disposable;
-import coil.target.Target;
+import coil3.DrawableImage;
+import coil3.ImageDrawable;
+import coil3.ImageLoader;
+import coil3.request.ImageRequest;
+import coil3.request.Disposable;
+import coil3.target.Target;
 import io.noties.markwon.AbstractMarkwonPlugin;
 import io.noties.markwon.MarkwonConfiguration;
 import io.noties.markwon.MarkwonSpansFactory;
@@ -57,7 +60,7 @@ public class CoilImagesPlugin extends AbstractMarkwonPlugin {
             public void cancel(@NonNull Disposable disposable) {
                 disposable.dispose();
             }
-        }, Coil.imageLoader(context));
+        }, new ImageLoader.Builder(context).build());
     }
 
     @NonNull
@@ -166,8 +169,18 @@ public class CoilImagesPlugin extends AbstractMarkwonPlugin {
                 this.loaded = loaded;
             }
 
+            private Drawable convertToDrawable(@NonNull coil3.Image image) {
+                if (image instanceof DrawableImage) {
+                    return ((DrawableImage) image).getDrawable();
+                } else {
+                    return new ImageDrawable(image);
+                }
+            }
+
             @Override
-            public void onSuccess(@NonNull Drawable loadedDrawable) {
+            public void onSuccess(@NonNull coil3.Image result) {
+                Drawable loadedDrawable = convertToDrawable(result);
+
                 // @since 4.5.1 check finished flag (result can be delivered _before_ disposable is created)
                 if (cache.remove(drawable) != null
                         || !loaded.get()) {
@@ -181,17 +194,21 @@ public class CoilImagesPlugin extends AbstractMarkwonPlugin {
             }
 
             @Override
-            public void onStart(@Nullable Drawable placeholder) {
+            public void onStart(@Nullable coil3.Image placeholder) {
                 if (placeholder != null && drawable.isAttached()) {
-                    DrawableUtils.applyIntrinsicBoundsIfEmpty(placeholder);
-                    drawable.setResult(placeholder);
+                    Drawable loadedDrawable = convertToDrawable(placeholder);
+
+                    DrawableUtils.applyIntrinsicBoundsIfEmpty(loadedDrawable);
+                    drawable.setResult(loadedDrawable);
                 }
             }
 
             @Override
-            public void onError(@Nullable Drawable errorDrawable) {
+            public void onError(@Nullable coil3.Image error) {
                 if (cache.remove(drawable) != null) {
-                    if (errorDrawable != null && drawable.isAttached()) {
+                    if (error != null && drawable.isAttached()) {
+                        Drawable errorDrawable = convertToDrawable(error);
+
                         DrawableUtils.applyIntrinsicBoundsIfEmpty(errorDrawable);
                         drawable.setResult(errorDrawable);
                     }

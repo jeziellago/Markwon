@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 
 def gitSha = { ->
     def output = new ByteArrayOutputStream()
@@ -13,13 +13,16 @@ def gitSha = { ->
 }.memoize()
 
 android {
+    namespace = "io.noties.markwon.app"
 
-    compileSdkVersion config['compile-sdk']
-    buildToolsVersion config['build-tools']
+    buildFeatures {
+        buildConfig true
+    }
 
     defaultConfig {
         applicationId 'io.noties.markwon.app'
-        minSdkVersion 23
+        minSdkVersion config['min-sdk']
+        compileSdkVersion config['compile-sdk']
         targetSdkVersion config['target-sdk']
         versionCode 1
         versionName version
@@ -106,10 +109,6 @@ kapt {
     arguments {
         arg('markwon.samples.file', "${projectDir}/samples.json".toString())
     }
-}
-
-androidExtensions {
-    features = ["parcelize"]
 }
 
 configurations.all {

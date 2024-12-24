@@ -2,30 +2,34 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 android {
+    namespace = "io.noties.markwon.image.coil"
 
     compileSdkVersion config['compile-sdk']
-    buildToolsVersion config['build-tools']
 
     defaultConfig {
         minSdkVersion config['min-sdk']
         targetSdkVersion config['target-sdk']
     }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 dependencies {
     implementation "io.noties.markwon:core:4.6.2"
-
-    // @since 4.5.1 declare `coil-base` as api dependency (would require users
-    //  to have explicit coil dependency)
-    api deps['coil-base']
-    compileOnly deps['coil']
+    api deps['coil-okhttp']
+    api deps['coil']
 }
 
 afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
-                from components.release
+                 from components.release
 
                 groupId = 'dev.jeziellago.markwon'
                 artifactId = 'image-coil'

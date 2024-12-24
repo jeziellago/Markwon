@@ -1,9 +1,9 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespace = "io.noties.markwon.inline.parser"
 
     compileSdkVersion config['compile-sdk']
-    buildToolsVersion config['build-tools']
 
     defaultConfig {
         minSdkVersion config['min-sdk']
