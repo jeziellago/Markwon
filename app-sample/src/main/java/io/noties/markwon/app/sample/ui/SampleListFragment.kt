@@ -43,7 +43,7 @@ import io.noties.markwon.app.utils.tagDisplayName
 import io.noties.markwon.app.widget.SearchBar
 import io.noties.markwon.movement.MovementMethodPlugin
 import io.noties.markwon.sample.annotations.MarkwonArtifact
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 class SampleListFragment : Fragment() {
 
@@ -398,6 +398,7 @@ ${result.throwable.stackTraceString()}
                 when (search) {
                     is SampleSearch.Artifact -> putString(ARG_ARTIFACT, search.artifact.name)
                     is SampleSearch.Tag -> putString(ARG_TAG, search.tag)
+                    else -> Unit
                 }
 
                 val query = search.text

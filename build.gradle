@@ -1,11 +1,12 @@
 buildscript {
-    ext.kotlin_version = '1.6.10'
+    ext.kotlin_version = '1.9.10'
     repositories {
         google()
         jcenter()
+        gradlePluginPortal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
+        classpath 'com.android.tools.build:gradle:8.2.0'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
@@ -34,7 +35,7 @@ task clean(type: Delete) {
 }
 
 wrapper {
-    gradleVersion '6.1.1'
+    gradleVersion '8.2.0'
     distributionType 'all'
 }
 
@@ -49,16 +50,15 @@ if (hasProperty('local')) {
 ext {
 
     config = [
-            'build-tools'    : '30.0.3',
-            'compile-sdk'    : 31,
-            'target-sdk'     : 31,
+            'compile-sdk'    : 34,
+            'target-sdk'     : 34,
             'min-sdk'        : 21,
             'push-aar-gradle': 'https://raw.githubusercontent.com/noties/gradle-mvn-push/master/gradle-mvn-push-aar.gradle'
     ]
 
     final def commonMarkVersion = '0.13.0'
     final def daggerVersion = '2.10'
-    final def coilVersion = '2.2.2'
+    final def coilVersion = '3.0.4'
 
     // please note that `pl.droidsonroids.gif:android-gif-drawable:1.2.15` is used due to the minimum
     // api level mismatch that Markwon supports (16) and later versions of AndroidGifDrawable (17).
@@ -87,8 +87,8 @@ ext {
             'dagger'                  : "com.google.dagger:dagger:$daggerVersion",
             'picasso'                 : 'com.squareup.picasso:picasso:2.71828',
             'glide'                   : 'com.github.bumptech.glide:glide:4.11.0',
-            'coil'                    : "io.coil-kt:coil:$coilVersion",
-            'coil-base'               : "io.coil-kt:coil-base:$coilVersion",
+            'coil'                    : "io.coil-kt.coil3:coil:$coilVersion",
+            'coil-okhttp'             : "io.coil-kt.coil3:coil-network-okhttp:$coilVersion",
             'ix-java'                 : 'com.github.akarnokd:ixjava:1.0.0',
             'gson'                    : 'com.google.code.gson:gson:2.8.6',
             'commons-io'              : 'commons-io:commons-io:2.6'
@@ -129,11 +129,6 @@ def registerArtifact(project) {
     }
 
     project.afterEvaluate {
-
-        // disable generation of BuildConfig files
-        project.generateDebugBuildConfig.enabled = false
-        project.generateReleaseBuildConfig.enabled = false
-
         // print test status (for CI)
         project.android.testOptions.unitTests.all {
             testLogging {

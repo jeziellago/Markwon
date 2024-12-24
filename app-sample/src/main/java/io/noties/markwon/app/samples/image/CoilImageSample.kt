@@ -1,9 +1,11 @@
 package io.noties.markwon.app.samples.image
 
-import coil.ImageLoader
-import coil.request.Disposable
-import coil.request.ImageRequest
-import coil.transform.CircleCropTransformation
+import coil3.ImageLoader
+import coil3.request.Disposable
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import coil3.request.transformations
+import coil3.transform.CircleCropTransformation
 import io.noties.markwon.Markwon
 import io.noties.markwon.app.sample.ui.MarkwonTextViewSample
 import io.noties.markwon.image.AsyncDrawable

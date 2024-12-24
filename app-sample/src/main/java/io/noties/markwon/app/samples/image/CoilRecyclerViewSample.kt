@@ -1,10 +1,12 @@
 package io.noties.markwon.app.samples.image
 
 import androidx.recyclerview.widget.LinearLayoutManager
-import coil.Coil
-import coil.request.Disposable
-import coil.request.ImageRequest
-import coil.transform.RoundedCornersTransformation
+import coil3.ImageLoader
+import coil3.request.Disposable
+import coil3.request.ImageRequest
+import coil3.request.placeholder
+import coil3.request.transformations
+import coil3.transform.RoundedCornersTransformation
 import io.noties.markwon.Markwon
 import io.noties.markwon.app.R
 import io.noties.markwon.app.sample.ui.MarkwonRecyclerViewSample
@@ -65,7 +67,8 @@ class CoilRecyclerViewSample : MarkwonRecyclerViewSample() {
             disposable.dispose()
           }
         },
-        Coil.imageLoader(context)))
+        ImageLoader(context)
+      ))
       .build()
 
     val adapter = MarkwonAdapter.createTextViewIsRoot(R.layout.adapter_node)
